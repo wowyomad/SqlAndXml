@@ -1,6 +1,8 @@
 package by.bsuir.sax;
 
 
+import java.text.MessageFormat;
+
 public class Book {
     private String id;
     private String author;
@@ -69,6 +71,15 @@ public class Book {
 
     @Override
     public String toString() {
-        return getTitle() + " " + getAuthor() + " " + getDescription();
+        return MessageFormat.format("""
+                id '{'{0}'}'
+        title '{'{1}'}'
+        author '{'{2}'}'
+        genre '{'{3}'}'
+        price '{'{4}'}'
+        publish date '{'{5}'}'
+        description '{'{6}'}'
+        """, getId(), getTitle(), getAuthor(), getGenre(), getPrice(), getPublishDate(), getDescription());
     }
+
 }

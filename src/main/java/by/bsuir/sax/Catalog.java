@@ -27,6 +27,7 @@ public class Catalog {
         StringBuilder sb = new StringBuilder();
         for (Book b : books) {
             sb.append(b.toString());
+            sb.append('\n');
         }
         return sb.toString();
     }

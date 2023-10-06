@@ -5,63 +5,63 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookXMLHandler extends DefaultHandler {
-    Catalog myCatalog = null;
+    Catalog books = null;
     Book book = null;
-    String currentCharacters;
+    StringBuilder content;
+
+    public BookXMLHandler() {
+        books = new Catalog();
+        content = new StringBuilder();
+    }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-        if (qName.equalsIgnoreCase("catalog")) {
-            myCatalog = new Catalog();
-        } else if (qName.equalsIgnoreCase("book")) {
+         if (qName.equalsIgnoreCase("book")) {
             book = new Book();
         }
+        content.setLength(0);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName){
-        System.out.println("in end element: " + qName);
         switch (qName) {
             case "catalog":
-                System.out.println("Done with catalog");
-                System.out.println(myCatalog.toString());
                 break;
             case "book":
-                System.out.println("in book end: " + book);
-                myCatalog.push(book);
+                books.push(book);
                 break;
             case "author":
-                book.setAuthor(currentCharacters);
+                book.setAuthor(content.toString());
                 break;
             case "title":
-                book.setTitle(currentCharacters);
+                book.setTitle(content.toString());
                 break;
             case "price":
-                book.setPrice(Double.parseDouble(currentCharacters));
+                book.setPrice(Double.parseDouble(content.toString()));
                 break;
             case "genre":
-                book.setGenre(currentCharacters);
+                book.setGenre(content.toString());
                 break;
             case "publish_date":
-                book.setPublishDate(currentCharacters);
+                book.setPublishDate(content.toString());
                 break;
             case "description":
-                book.setDescription(currentCharacters);
+                book.setDescription(content.toString());
                 break;
-
         }
     }
 
     @Override
     public void characters(char ch[], int start, int length ) {
-        currentCharacters = new String(ch, start, length);
+        content.append(ch, start, length);
     }
 
     public Catalog getBooks() {
-        return myCatalog;
+        return books;
     }
 
 }
