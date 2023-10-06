@@ -4,13 +4,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
+import java.util.List;
+
 public class BookXMLHandler extends DefaultHandler {
     Catalog myCatalog = null;
     Book book = null;
-
-    boolean author = false;
-    boolean title = false;
-    boolean description = false;
     String currentCharacters;
 
     @Override
@@ -19,32 +18,40 @@ public class BookXMLHandler extends DefaultHandler {
             myCatalog = new Catalog();
         } else if (qName.equalsIgnoreCase("book")) {
             book = new Book();
-        } else if (qName.equalsIgnoreCase("author")) {
-            author = true;
-        } else if (qName.equalsIgnoreCase("title")) {
-            title = true;
-        } else if (qName.equalsIgnoreCase("description")) {
-            description = true;
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) {
-        if (qName.equalsIgnoreCase("catalog")) {
-            System.out.println("Done with catalog");
-            System.out.println(myCatalog.toString());
-        } else if (qName.equalsIgnoreCase("book")) {
-            myCatalog.push(book);
-            System.out.println(book);
-        } else if (qName.equalsIgnoreCase("author")) {
-            book.setAuthor(currentCharacters);
-            author = false;
-        } else if (qName.equalsIgnoreCase("title")) {
-            book.setTitle(currentCharacters);
-            title = false;
-        } else if (qName.equalsIgnoreCase("description")) {
-            book.setDescription(currentCharacters);
-            description = false;
+    public void endElement(String uri, String localName, String qName){
+        System.out.println("in end element: " + qName);
+        switch (qName) {
+            case "catalog":
+                System.out.println("Done with catalog");
+                System.out.println(myCatalog.toString());
+                break;
+            case "book":
+                System.out.println("in book end: " + book);
+                myCatalog.push(book);
+                break;
+            case "author":
+                book.setAuthor(currentCharacters);
+                break;
+            case "title":
+                book.setTitle(currentCharacters);
+                break;
+            case "price":
+                book.setPrice(Double.parseDouble(currentCharacters));
+                break;
+            case "genre":
+                book.setGenre(currentCharacters);
+                break;
+            case "publish_date":
+                book.setPublishDate(currentCharacters);
+                break;
+            case "description":
+                book.setDescription(currentCharacters);
+                break;
+
         }
     }
 
@@ -53,5 +60,8 @@ public class BookXMLHandler extends DefaultHandler {
         currentCharacters = new String(ch, start, length);
     }
 
+    public Catalog getBooks() {
+        return myCatalog;
+    }
 
 }
